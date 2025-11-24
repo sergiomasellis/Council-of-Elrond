@@ -1,15 +1,31 @@
-* {
-  box-sizing: border-box;
-}
-
 .app {
   display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background: #ffffff;
-  color: #333;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  position: relative;
+  background:
+    radial-gradient(120% 100% at 10% 20%, rgba(63, 225, 192, 0.08), transparent 45%),
+    radial-gradient(120% 100% at 70% -10%, rgba(47, 124, 246, 0.12), transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  isolation: isolate;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  /* inset: -140px; */
+  background: radial-gradient(60% 60% at 85% 20%, rgba(47, 124, 246, 0.14), transparent 55%);
+  filter: blur(70px);
+  opacity: 0.65;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.app > * {
+  position: relative;
+  z-index: 1;
 }

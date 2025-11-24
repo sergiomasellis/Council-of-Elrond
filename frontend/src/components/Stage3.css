@@ -1,25 +1,63 @@
-.stage3 {
-  background: #f0fff0;
-  border-color: #c8e6c8;
+.final-verdict-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.final-response {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 6px;
-  border: 1px solid #c8e6c8;
+.verdict-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--brand-primary);
+  filter: drop-shadow(0 6px 16px rgba(63, 225, 192, 0.2));
 }
 
-.chairman-label {
-  color: #2d8a2d;
+.stage3 h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.final-response-card {
+  background: linear-gradient(140deg, rgba(63, 225, 192, 0.16), rgba(47, 124, 246, 0.14));
+  border: 1px solid rgba(63, 225, 192, 0.35);
+  border-radius: calc(var(--radius-lg) + 2px);
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-strong);
+}
+
+.final-response-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+}
+
+.chairman-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 13px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
   font-size: 12px;
-  font-family: monospace;
-  margin-bottom: 12px;
-  font-weight: 600;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.chairman-badge strong {
+  font-weight: 700;
+  margin-left: 6px;
 }
 
 .final-text {
-  color: #333;
-  line-height: 1.7;
   font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-primary);
 }

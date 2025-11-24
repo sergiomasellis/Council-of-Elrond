@@ -1,65 +1,152 @@
-.stage {
-  margin: 24px 0;
-  padding: 20px;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+.stage-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.stage-icon-wrapper {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, rgba(63, 225, 192, 0.18), rgba(47, 124, 246, 0.14));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.stage-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--brand-primary);
 }
 
 .stage-title {
-  margin: 0 0 16px 0;
-  color: #333;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.tabs {
+.details-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  user-select: none;
+  letter-spacing: 0.01em;
+}
+
+.details-toggle:hover {
+  text-decoration: none;
+  color: var(--brand-primary);
+}
+
+.icon-xs {
+  width: 13px;
+  height: 13px;
+}
+
+.stage-content-wrapper {
+  animation: slideDown 0.2s ease;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.agent-selector {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
-.tab {
-  padding: 8px 16px;
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px 6px 0 0;
-  color: #666;
+.agent-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-.tab:hover {
-  background: #f0f0f0;
-  color: #333;
-  border-color: #4a90e2;
+.agent-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.tab.active {
-  background: #ffffff;
-  color: #4a90e2;
-  border-color: #4a90e2;
-  border-bottom-color: #ffffff;
-  font-weight: 600;
+.agent-chip.active {
+  background: linear-gradient(120deg, rgba(63, 225, 192, 0.2), rgba(47, 124, 246, 0.2));
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #041019;
+  box-shadow: 0 10px 22px rgba(47, 124, 246, 0.2);
 }
 
-.tab-content {
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
+.agent-avatar-small {
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
 }
 
-.model-name {
-  color: #888;
+.agent-chip.active .agent-avatar-small {
+  background: var(--brand-primary);
+  color: white;
+  border-color: var(--brand-primary);
+}
+
+.agent-response-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.model-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  background: rgba(63, 225, 192, 0.12);
+  border: 1px solid rgba(63, 225, 192, 0.4);
+  border-radius: var(--radius-full);
+  color: var(--brand-primary);
   font-size: 12px;
-  margin-bottom: 12px;
-  font-family: monospace;
-}
-
-.response-text {
-  color: #333;
-  line-height: 1.6;
+  font-family: var(--font-mono);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 10px;
 }
