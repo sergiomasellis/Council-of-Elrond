@@ -1,13 +1,15 @@
 import { useRef, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
-import { BrainIcon } from './Icons';
+import { BrainIcon, MenuIcon } from './Icons';
+import PixelBlast from './PixelBlast';
 import './ChatInterface.css';
 
 export default function ChatInterface({
   conversation,
   onSendMessage,
   isLoading,
+  onToggleSidebar,
 }) {
   const messagesEndRef = useRef(null);
 
@@ -22,7 +24,31 @@ export default function ChatInterface({
   if (!conversation) {
     return (
       <div className="chat-interface">
+        <button className="mobile-menu-btn" onClick={onToggleSidebar} aria-label="Open menu">
+          <MenuIcon className="icon-sm" />
+        </button>
         <div className="empty-state">
+          <div className="empty-visual">
+            <PixelBlast
+              variant="circle"
+              pixelSize={3}
+              color="#0f5c4f"
+              patternScale={2}
+              patternDensity={0.55}
+              pixelSizeJitter={1.25}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={2.6}
+              edgeFade={0.25}
+              transparent
+            />
+          </div>
           <div className="empty-state-icon">
             <BrainIcon className="icon-xl" />
           </div>
@@ -35,9 +61,33 @@ export default function ChatInterface({
 
   return (
     <div className="chat-interface">
+      <button className="mobile-menu-btn" onClick={onToggleSidebar} aria-label="Open menu">
+        <MenuIcon className="icon-sm" />
+      </button>
       <div className="messages-container">
         {conversation.messages.length === 0 ? (
           <div className="empty-state">
+            <div className="empty-visual">
+            <PixelBlast
+              variant="circle"
+              pixelSize={3}
+              color="#0f5c4f"
+              patternScale={3}
+              patternDensity={0.55}
+              pixelSizeJitter={1.25}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={2.6}
+              edgeFade={0.25}
+              transparent
+            />
+            </div>
             <div className="empty-state-icon">
               <BrainIcon className="icon-xl" />
             </div>

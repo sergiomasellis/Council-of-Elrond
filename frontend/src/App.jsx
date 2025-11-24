@@ -10,6 +10,7 @@ function App() {
   const [currentConversation, setCurrentConversation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState('dark');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Check local storage or system preference
@@ -29,6 +30,10 @@ function App() {
     localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
   };
+
+  const openSidebar = () => setIsSidebarOpen(true);
+  const closeSidebar = () => setIsSidebarOpen(false);
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   // Load conversations on mount
   useEffect(() => {
@@ -68,6 +73,7 @@ function App() {
         ...conversations,
       ]);
       setCurrentConversationId(newConv.id);
+      closeSidebar();
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
@@ -75,6 +81,7 @@ function App() {
 
   const handleSelectConversation = (id) => {
     setCurrentConversationId(id);
+    closeSidebar();
   };
 
   const handleDeleteConversation = async (id, e) => {
@@ -88,6 +95,7 @@ function App() {
         setCurrentConversationId(null);
         setCurrentConversation(null);
       }
+      closeSidebar();
     } catch (error) {
       console.error('Failed to delete conversation:', error);
     }
@@ -227,11 +235,19 @@ function App() {
         onDeleteConversation={handleDeleteConversation}
         theme={theme}
         toggleTheme={toggleTheme}
+        isOpen={isSidebarOpen}
+        onClose={closeSidebar}
+      />
+      <div
+        className={`sidebar-backdrop ${isSidebarOpen ? 'show' : ''}`}
+        onClick={closeSidebar}
+        aria-hidden="true"
       />
       <ChatInterface
         conversation={currentConversation}
         onSendMessage={handleSendMessage}
         isLoading={isLoading}
+        onToggleSidebar={toggleSidebar}
       />
     </div>
   );

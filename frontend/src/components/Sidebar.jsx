@@ -1,4 +1,4 @@
-import { PlusIcon, ChatIcon, BrainIcon, SunIcon, MoonIcon, TrashIcon } from './Icons';
+import { PlusIcon, ChatIcon, BrainIcon, SunIcon, MoonIcon, TrashIcon, CloseIcon } from './Icons';
 import './Sidebar.css';
 
 export default function Sidebar({
@@ -9,14 +9,19 @@ export default function Sidebar({
   onDeleteConversation,
   theme,
   toggleTheme,
+  isOpen = false,
+  onClose,
 }) {
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <div className="logo-area">
           <BrainIcon className="logo-icon" />
           <h1>LLM Council</h1>
         </div>
+        <button className="mobile-close-btn" onClick={onClose} aria-label="Close menu">
+          <CloseIcon className="icon-sm" />
+        </button>
         <button className="new-conversation-btn" onClick={onNewConversation}>
           <PlusIcon className="icon-sm" />
           <span>New Chat</span>

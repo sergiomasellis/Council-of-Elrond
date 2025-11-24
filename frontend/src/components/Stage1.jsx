@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { BotIcon, ChevronDownIcon, ChevronRightIcon } from './Icons';
+import Markdown from './Markdown';
 import './Stage1.css';
 
 export default function Stage1({ responses }) {
@@ -48,7 +48,7 @@ export default function Stage1({ responses }) {
               <span className="model-badge">{responses[activeTab].model}</span>
             </div>
             <div className="response-text markdown-content">
-              <ReactMarkdown>{responses[activeTab].response}</ReactMarkdown>
+              <Markdown>{responses[activeTab].response}</Markdown>
             </div>
           </div>
         </div>

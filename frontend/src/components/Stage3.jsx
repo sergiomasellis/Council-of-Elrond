@@ -1,5 +1,5 @@
-import ReactMarkdown from 'react-markdown';
 import { SparklesIcon } from './Icons';
+import Markdown from './Markdown';
 import './Stage3.css';
 
 export default function Stage3({ finalResponse }) {
@@ -21,7 +21,7 @@ export default function Stage3({ finalResponse }) {
           <span>Synthesized by <strong>{modelName}</strong></span>
         </div>
         <div className="final-text markdown-content">
-          <ReactMarkdown>{finalResponse.response}</ReactMarkdown>
+          <Markdown>{finalResponse.response}</Markdown>
         </div>
       </div>
     </div>

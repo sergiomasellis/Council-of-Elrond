@@ -1,10 +1,10 @@
 .leaderboard {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: 18px;
   margin-bottom: 20px;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
 }
 
 .leaderboard-title {
@@ -27,15 +27,15 @@
   align-items: center;
   gap: 16px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-tertiary);
   border-radius: var(--radius-md);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
 }
 
 .leaderboard-item.winner {
-  border-color: rgba(63, 225, 192, 0.35);
-  background: linear-gradient(120deg, rgba(63, 225, 192, 0.18), rgba(47, 124, 246, 0.16));
+  border-color: var(--brand-primary);
+  background: var(--bg-accent);
 }
 
 .rank-badge {
@@ -80,7 +80,7 @@
 
 .rank-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--brand-secondary), var(--brand-primary));
+  background: var(--brand-secondary);
   border-radius: 2px;
 }
 
@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--brand-secondary);
+  color: var(--brand-primary);
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
@@ -109,7 +109,7 @@
 
 .details-toggle:hover {
   text-decoration: none;
-  color: var(--brand-primary);
+  color: var(--brand-secondary);
 }
 
 .icon-xs {
@@ -118,13 +118,13 @@
 }
 
 .review-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-tertiary);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-color);
   padding: 18px;
   margin-top: 10px;
   animation: slideDown 0.2s ease;
-  box-shadow: var(--shadow-soft);
+  box-shadow: none;
 }
 
 @keyframes slideDown {

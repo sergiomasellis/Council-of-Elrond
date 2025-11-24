@@ -2,20 +2,20 @@
 
 :root {
   /* Core Colors */
-  --bg-primary: #05070f;
-  --bg-secondary: #0b1020;
-  --bg-tertiary: #111a2e;
-  --bg-accent: #162138;
+  --bg-primary: #050607;
+  --bg-secondary: #0b0d10;
+  --bg-tertiary: #11151b;
+  --bg-accent: #151a22;
 
   /* Text Colors */
-  --text-primary: #e8edf7;
-  --text-secondary: #a6b3d3;
-  --text-tertiary: #5d6a8a;
+  --text-primary: #e6e9ef;
+  --text-secondary: #a7afc2;
+  --text-tertiary: #6d7586;
 
   /* Brand Colors */
-  --brand-primary: #3fe1c0;
-  --brand-secondary: #2f7cf6;
-  --brand-glow: rgba(55, 162, 255, 0.2);
+  --brand-primary: #18c2a5;
+  --brand-secondary: #3582f4;
+  --brand-glow: transparent;
 
   /* Status Colors */
   --success: #22c55e;
@@ -23,12 +23,12 @@
   --error: #ef5e66;
 
   /* UI Elements */
-  --border-color: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --glass-bg: rgba(9, 14, 29, 0.65);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --glass-bg: rgba(12, 14, 18, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.35);
-  --shadow-strong: 0 18px 60px rgba(0, 0, 0, 0.5);
+  --shadow-soft: none;
+  --shadow-strong: none;
 
   /* Typography */
   --font-sans: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -74,11 +74,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(140% 120% at 12% 10%, rgba(63, 225, 192, 0.12), transparent 40%),
-    radial-gradient(120% 120% at 82% 0%, rgba(47, 124, 246, 0.16), transparent 42%),
-    radial-gradient(120% 140% at 50% 90%, rgba(21, 196, 255, 0.08), transparent 55%),
-    var(--bg-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -154,13 +150,13 @@ body {
 }
 
 .markdown-content pre {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-tertiary);
   padding: 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--glass-border);
   overflow-x: auto;
   margin: 0 0 16px 0;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
 .markdown-content code {
@@ -176,6 +172,95 @@ body {
   background: none;
   padding: 0;
   color: inherit;
+}
+
+.markdown-content pre[class*="language-"] {
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color);
+}
+
+.markdown-content code[class*="language-"] {
+  background: transparent;
+}
+
+.markdown-content .token.comment,
+.markdown-content .token.prolog,
+.markdown-content .token.doctype,
+.markdown-content .token.cdata {
+  color: #7c8294;
+}
+
+.markdown-content .token.punctuation {
+  color: #cbd2df;
+}
+
+.markdown-content .token.property,
+.markdown-content .token.tag,
+.markdown-content .token.constant,
+.markdown-content .token.symbol,
+.markdown-content .token.deleted {
+  color: #ef5e66;
+}
+
+.markdown-content .token.boolean,
+.markdown-content .token.number {
+  color: #f8b84e;
+}
+
+.markdown-content .token.selector,
+.markdown-content .token.attr-name,
+.markdown-content .token.string,
+.markdown-content .token.char,
+.markdown-content .token.builtin,
+.markdown-content .token.inserted {
+  color: #18c2a5;
+}
+
+.markdown-content .token.operator,
+.markdown-content .token.entity,
+.markdown-content .token.url,
+.markdown-content .token.variable {
+  color: #63a4ff;
+}
+
+.markdown-content .token.atrule,
+.markdown-content .token.attr-value,
+.markdown-content .token.function,
+.markdown-content .token.class-name {
+  color: #63a4ff;
+}
+
+.markdown-content .token.keyword {
+  color: #c084fc;
+}
+
+.markdown-content .token.regex,
+.markdown-content .token.important {
+  color: #f472b6;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  border: 1px solid var(--border-color);
+}
+
+.markdown-content th,
+.markdown-content td {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.markdown-content th {
+  background: var(--bg-tertiary);
+  font-weight: 700;
+}
+
+.markdown-content tr:nth-child(even) td {
+  background: var(--bg-secondary);
 }
 
 .markdown-content blockquote {

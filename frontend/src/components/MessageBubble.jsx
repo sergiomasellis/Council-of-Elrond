@@ -1,8 +1,8 @@
-import ReactMarkdown from 'react-markdown';
 import Stage1 from './Stage1';
 import Stage2 from './Stage2';
 import Stage3 from './Stage3';
 import { UserIcon, BotIcon, SparklesIcon } from './Icons';
+import Markdown from './Markdown';
 
 export default function MessageBubble({ message }) {
     const isUser = message.role === 'user';
@@ -20,9 +20,7 @@ export default function MessageBubble({ message }) {
 
                 {isUser ? (
                     <div className="message-content user-content">
-                        <div className="markdown-content">
-                            <ReactMarkdown>{message.content}</ReactMarkdown>
-                        </div>
+                        <Markdown>{message.content}</Markdown>
                     </div>
                 ) : (
                     <div className="message-content assistant-content">

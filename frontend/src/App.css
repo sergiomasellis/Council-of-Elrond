@@ -4,28 +4,42 @@
   width: 100vw;
   overflow: hidden;
   position: relative;
-  background:
-    radial-gradient(120% 100% at 10% 20%, rgba(63, 225, 192, 0.08), transparent 45%),
-    radial-gradient(120% 100% at 70% -10%, rgba(47, 124, 246, 0.12), transparent 40%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
-  background-color: var(--bg-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
   isolation: isolate;
 }
 
 .app::before {
-  content: '';
-  position: absolute;
-  /* inset: -140px; */
-  background: radial-gradient(60% 60% at 85% 20%, rgba(47, 124, 246, 0.14), transparent 55%);
-  filter: blur(70px);
-  opacity: 0.65;
-  z-index: 0;
-  pointer-events: none;
+  content: none;
 }
 
 .app > * {
-  position: relative;
-  z-index: 1;
+  /* position: relative;
+  z-index: 1; */
+}
+
+@media (max-width: 900px) {
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+  }
+
+  .sidebar-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { TrophyIcon, ChevronDownIcon, ChevronRightIcon } from './Icons';
+import Markdown from './Markdown';
 import './Stage2.css';
 
 function deAnonymizeText(text, labelToModel) {
@@ -84,9 +84,9 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
 
           <div className="review-card">
             <div className="review-content markdown-content">
-              <ReactMarkdown>
+              <Markdown>
                 {deAnonymizeText(rankings[activeTab].ranking, labelToModel)}
-              </ReactMarkdown>
+              </Markdown>
             </div>
           </div>
         </div>

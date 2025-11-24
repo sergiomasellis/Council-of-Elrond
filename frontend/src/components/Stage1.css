@@ -8,13 +8,13 @@
 .stage-icon-wrapper {
   width: 34px;
   height: 34px;
-  background: linear-gradient(135deg, rgba(63, 225, 192, 0.18), rgba(47, 124, 246, 0.14));
+  background: var(--bg-secondary);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
 }
 
 .stage-icon {
@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--brand-secondary);
+  color: var(--brand-primary);
   cursor: pointer;
   font-size: 12px;
   font-weight: 700;
@@ -45,7 +45,7 @@
 
 .details-toggle:hover {
   text-decoration: none;
-  color: var(--brand-primary);
+  color: var(--brand-secondary);
 }
 
 .icon-xs {
@@ -55,10 +55,10 @@
 
 .stage-content-wrapper {
   animation: slideDown 0.2s ease;
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.02);
-  box-shadow: var(--shadow-soft);
+  background: var(--bg-secondary);
+  box-shadow: none;
   padding: 12px;
 }
 
@@ -86,32 +86,32 @@
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
   color: var(--text-primary);
   cursor: pointer;
   transition: all var(--transition-fast);
   font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
 .agent-chip:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-accent);
 }
 
 .agent-chip.active {
-  background: linear-gradient(120deg, rgba(63, 225, 192, 0.2), rgba(47, 124, 246, 0.2));
-  border-color: rgba(255, 255, 255, 0.16);
-  color: #041019;
-  box-shadow: 0 10px 22px rgba(47, 124, 246, 0.2);
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #03110f;
+  box-shadow: none;
 }
 
 .agent-avatar-small {
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-secondary);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -119,7 +119,7 @@
   font-size: 10px;
   font-weight: 700;
   color: var(--text-primary);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-color);
 }
 
 .agent-chip.active .agent-avatar-small {
@@ -129,20 +129,20 @@
 }
 
 .agent-response-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-tertiary);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-color);
   padding: 18px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: none;
 }
 
 .model-badge {
   display: inline-block;
   padding: 5px 10px;
-  background: rgba(63, 225, 192, 0.12);
-  border: 1px solid rgba(63, 225, 192, 0.4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
-  color: var(--brand-primary);
+  color: var(--text-secondary);
   font-size: 12px;
   font-family: var(--font-mono);
   margin-bottom: 16px;

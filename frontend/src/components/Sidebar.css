@@ -1,18 +1,29 @@
 .sidebar {
-  width: 320px;
-  background: linear-gradient(180deg, rgba(11, 16, 32, 0.9), rgba(11, 16, 32, 0.7));
-  border-right: 1px solid var(--glass-border);
+  width: 240px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   height: 100vh;
-  backdrop-filter: blur(16px);
-  box-shadow: 12px 0 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: none;
+  transform: translateX(0);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .sidebar-header {
   padding: 22px 20px 16px;
-  border-bottom: 1px solid var(--glass-border);
-  background: linear-gradient(135deg, rgba(63, 225, 192, 0.08), rgba(47, 124, 246, 0.08));
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .logo-area {
@@ -23,11 +34,15 @@
   padding-left: 4px;
 }
 
+.mobile-close-btn {
+  display: none;
+}
+
 .logo-icon {
   width: 30px;
   height: 30px;
   color: var(--brand-primary);
-  filter: drop-shadow(0 4px 12px rgba(63, 225, 192, 0.35));
+  filter: none;
 }
 
 .sidebar-header h1 {
@@ -44,16 +59,16 @@
 
 .new-conversation-btn {
   width: 100%;
-  padding: 12px 16px;
-  background: linear-gradient(120deg, var(--brand-primary), var(--brand-secondary));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  color: #f7fbff;
+  padding: 8px;
+  background: var(--brand-primary);
+  border: 1px solid var(--brand-primary);
+  border-radius: 50px;
+  color: #03110f;
   cursor: pointer;
   font-size: 14px;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
   font-weight: 700;
-  box-shadow: 0 10px 26px rgba(47, 124, 246, 0.25);
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,14 +76,16 @@
 }
 
 .new-conversation-btn:hover {
-  transform: translateY(-2px) scale(1.01);
-  filter: saturate(1.07);
-  box-shadow: 0 16px 36px rgba(63, 225, 192, 0.3);
+  transform: translateY(-1px);
+  filter: none;
+  background: var(--brand-secondary);
+  border-color: var(--brand-secondary);
+  box-shadow: none;
 }
 
 .new-conversation-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 14px 32px rgba(63, 225, 192, 0.3);
+  box-shadow: 0 0 0 2px var(--border-hover);
 }
 
 .new-conversation-btn:active {
@@ -96,9 +113,9 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
 }
 
 .no-conversations p {
@@ -111,25 +128,23 @@
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-fast);
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  background: var(--bg-secondary);
   display: flex;
   align-items: center;
   gap: 12px;
   position: relative;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
 }
 
 .conversation-item:hover {
   border-color: var(--border-hover);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-tertiary);
   transform: translateY(-1px);
 }
 
 .conversation-item.active {
-  background: linear-gradient(120deg, rgba(63, 225, 192, 0.14), rgba(47, 124, 246, 0.16));
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 26px rgba(47, 124, 246, 0.2);
+  background: var(--bg-accent);
+  border-color: var(--border-hover);
 }
 
 .chat-icon-item {
@@ -164,7 +179,7 @@
 }
 
 .delete-btn {
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   border: 1px solid transparent;
   color: var(--text-secondary);
   cursor: pointer;
@@ -182,20 +197,19 @@
 }
 
 .delete-btn:hover {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(239, 94, 102, 0.12);
+  border-color: var(--border-hover);
+  background: var(--bg-accent);
   color: var(--error);
 }
 
 .sidebar-footer {
   padding: 16px;
-  border-top: 1px solid var(--glass-border);
-  background: rgba(12, 16, 28, 0.9);
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.3);
 }
 
 .user-profile {
@@ -203,31 +217,31 @@
   align-items: center;
   gap: 12px;
   padding: 10px;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   transition: background var(--transition-fast), border-color var(--transition-fast);
   cursor: pointer;
   flex: 1;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
 }
 
 .user-profile:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-accent);
   border-color: var(--border-hover);
 }
 
 .user-avatar {
   width: 36px;
   height: 36px;
-  background: radial-gradient(circle at 25% 25%, var(--brand-secondary), var(--brand-primary));
+  background: var(--brand-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #02101c;
+  color: #03110f;
   font-weight: 700;
   font-size: 14px;
-  box-shadow: 0 6px 18px rgba(63, 225, 192, 0.35);
+  box-shadow: none;
 }
 
 .user-info {
@@ -248,9 +262,9 @@
 
 .theme-toggle {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  width: 38px;
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  width: 44px;
   height: 38px;
   display: flex;
   align-items: center;
@@ -258,7 +272,7 @@
   cursor: pointer;
   color: var(--text-secondary);
   transition: all var(--transition-fast);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
 .theme-toggle:hover {
@@ -270,16 +284,113 @@
 
 @media (max-width: 1100px) {
   .sidebar {
-    width: 280px;
+    width: 220px;
   }
 }
 
 @media (max-width: 900px) {
   .sidebar {
-    width: 250px;
+    width: 75%;
+    max-width: 320px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    transform: translateX(-105%);
+    z-index: 30;
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+    background: var(--bg-secondary);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
   }
 
   .sidebar-header h1 {
     font-size: 18px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.35);
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    z-index: 100;
+  }
+
+  .mobile-close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-accent);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    width: 32px;
+    height: 32px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .mobile-close-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .sidebar-header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 14px 10px;
+  }
+
+  .logo-area {
+    margin: 0;
+    flex: 1;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sidebar-header h1 {
+    font-size: 18px;
+    white-space: nowrap;
+  }
+
+  .new-conversation-btn {
+    min-width: 110px;
+    padding: 10px 12px;
+    justify-content: center;
+  }
+
+  .conversation-list {
+    max-height: calc(100vh - 172px);
+    padding: 12px 12px 8px;
+  }
+
+  .sidebar-footer {
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80%;
+    max-width: 280px;
+  }
+
+  .sidebar-header {
+    padding: 16px;
+  }
+
+  .conversation-list {
+    max-height: calc(100vh - 172px);
   }
 }

@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "postprocessing": "^6.38.0",
+    "prismjs": "^1.30.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "rehype-prism-plus": "^2.0.1",
+    "remark-gfm": "^4.0.1",
+    "three": "^0.181.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
