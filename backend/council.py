@@ -1,8 +1,102 @@
 """3-stage LLM Council orchestration."""
 
 from typing import List, Dict, Any, Tuple
-from .openrouter import query_models_parallel, query_model
+from .openrouter import query_models_parallel, query_model, query_model_stream, query_models_stream, query_models_stream_per_model
 from .config import COUNCIL_MODELS, CHAIRMAN_MODEL
+from .search import SEARCH_TOOLS, execute_search_tool
+
+
+def build_stage1_history(
+    prior_messages: List[Dict[str, Any]],
+    current_query: str,
+    models: List[str]
+) -> Dict[str, List[Dict[str, str]]]:
+    """
+    Build per-model chat histories from conversation history.
+
+    Each model gets its own prior responses as the assistant turns,
+    with the council's chairman summary prefixed to subsequent user turns.
+    Models not present in a prior turn get the chairman summary as their response.
+
+    Returns:
+        Dict mapping model identifier to its message list
+    """
+    model_messages: Dict[str, List[Dict[str, str]]] = {model: [] for model in models}
+
+    # Extract (user, assistant) pairs from prior messages
+    pairs = []
+    i = 0
+    while i < len(prior_messages) - 1:
+        if prior_messages[i].get("role") == "user" and prior_messages[i + 1].get("role") == "assistant":
+            pairs.append((prior_messages[i], prior_messages[i + 1]))
+            i += 2
+        else:
+            i += 1
+
+    prev_summary = ""
+    for user_msg, assistant_msg in pairs:
+        user_content = user_msg["content"]
+        stage1_results = assistant_msg.get("stage1") or []
+        stage3_result = assistant_msg.get("stage3") or {}
+        chairman_summary = stage3_result.get("response", "")
+
+        # Lookup table: model -> its own stage1 response
+        stage1_by_model = {r["model"]: r["response"] for r in stage1_results}
+
+        for model in models:
+            # Prefix user message with previous turn's chairman summary
+            if prev_summary:
+                content = f"[Council's synthesized answer]\n{prev_summary}\n\n{user_content}"
+            else:
+                content = user_content
+            model_messages[model].append({"role": "user", "content": content})
+
+            # Model's own response, or chairman summary as fallback
+            model_response = stage1_by_model.get(model, chairman_summary)
+            model_messages[model].append({"role": "assistant", "content": model_response or ""})
+
+        prev_summary = chairman_summary
+
+    # Append the current query as the final user message
+    for model in models:
+        if prev_summary:
+            content = f"[Council's synthesized answer]\n{prev_summary}\n\n{current_query}"
+        else:
+            content = current_query
+        model_messages[model].append({"role": "user", "content": content})
+
+    return model_messages
+
+
+def build_stage3_history(
+    prior_messages: List[Dict[str, Any]]
+) -> List[Dict[str, str]]:
+    """
+    Build chairman chat history from prior conversation turns.
+
+    Returns alternating user/assistant messages with user questions
+    and chairman summaries.
+    """
+    history: List[Dict[str, str]] = []
+
+    i = 0
+    while i < len(prior_messages) - 1:
+        if prior_messages[i].get("role") == "user" and prior_messages[i + 1].get("role") == "assistant":
+            user_msg = prior_messages[i]
+            assistant_msg = prior_messages[i + 1]
+
+            stage3_result = assistant_msg.get("stage3") or {}
+            chairman_summary = stage3_result.get("response", "")
+
+            history.append({"role": "user", "content": user_msg["content"]})
+            if chairman_summary:
+                history.append({"role": "assistant", "content": chairman_summary})
+
+            i += 2
+        else:
+            i += 1
+
+    return history
 
 
 async def stage1_collect_responses(user_query: str) -> List[Dict[str, Any]]:
@@ -30,6 +124,25 @@ async def stage1_collect_responses(user_query: str) -> List[Dict[str, Any]]:
             })
 
     return stage1_results
+
+
+async def stage1_collect_responses_stream(user_query: str, conversation_history=None):
+    """
+    Stage 1: Collect individual responses from all council models (Streaming).
+    Yields (model, chunk) tuples.
+
+    Args:
+        user_query: The user's question
+        conversation_history: Optional list of prior messages for multi-turn context
+    """
+    if conversation_history:
+        model_messages = build_stage1_history(conversation_history, user_query, COUNCIL_MODELS)
+        async for model, chunk in query_models_stream_per_model(model_messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
+            yield model, chunk
+    else:
+        messages = [{"role": "user", "content": user_query}]
+        async for model, chunk in query_models_stream(COUNCIL_MODELS, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
+            yield model, chunk
 
 
 async def stage2_collect_rankings(
@@ -112,6 +225,70 @@ Now provide your evaluation and ranking:"""
     return stage2_results, label_to_model
 
 
+async def stage2_collect_rankings_stream(
+    user_query: str,
+    stage1_results: List[Dict[str, Any]]
+):
+    """
+    Stage 2: Each model ranks the anonymized responses (Streaming).
+    Yields (model, chunk, label_to_model) tuples.
+    """
+    # Create anonymized labels for responses (Response A, Response B, etc.)
+    labels = [chr(65 + i) for i in range(len(stage1_results))]  # A, B, C, ...
+
+    # Create mapping from label to model name
+    label_to_model = {
+        f"Response {label}": result['model']
+        for label, result in zip(labels, stage1_results)
+    }
+
+    # Build the ranking prompt
+    responses_text = "\n\n".join([
+        f"Response {label}:\n{result['response']}"
+        for label, result in zip(labels, stage1_results)
+    ])
+
+    ranking_prompt = f"""You are evaluating different responses to the following question:
+
+Question: {user_query}
+
+Here are the responses from different models (anonymized):
+
+{responses_text}
+
+Your task:
+1. First, evaluate each response individually. For each response, explain what it does well and what it does poorly.
+2. Then, at the very end of your response, provide a final ranking.
+
+IMPORTANT: Your final ranking MUST be formatted EXACTLY as follows:
+- Start with the line "FINAL RANKING:" (all caps, with colon)
+- Then list the responses from best to worst as a numbered list
+- Each line should be: number, period, space, then ONLY the response label (e.g., "1. Response A")
+- Do not add any other text or explanations in the ranking section
+
+Example of the correct format for your ENTIRE response:
+
+Response A provides good detail on X but misses Y...
+Response B is accurate but lacks depth on Z...
+Response C offers the most comprehensive answer...
+
+FINAL RANKING:
+1. Response C
+2. Response A
+3. Response B
+
+Now provide your evaluation and ranking:"""
+
+    messages = [{"role": "user", "content": ranking_prompt}]
+
+    # Yield label_to_model first so frontend knows the mapping
+    yield None, None, label_to_model
+
+    # Query all models in parallel with streaming
+    async for model, chunk in query_models_stream(COUNCIL_MODELS, messages):
+        yield model, chunk, None
+
+
 async def stage3_synthesize_final(
     user_query: str,
     stage1_results: List[Dict[str, Any]],
@@ -171,6 +348,82 @@ Provide a clear, well-reasoned final answer that represents the council's collec
     return {
         "model": CHAIRMAN_MODEL,
         "response": response.get('content', '')
+    }
+
+
+async def stage3_synthesize_final_stream(
+    user_query: str,
+    stage1_results: List[Dict[str, Any]],
+    stage2_results: List[Dict[str, Any]],
+    conversation_history=None
+):
+    """
+    Stage 3: Chairman synthesizes final response (Streaming).
+    Yields chunks of the response.
+
+    Args:
+        user_query: The user's question
+        stage1_results: Individual model responses from Stage 1
+        stage2_results: Rankings from Stage 2
+        conversation_history: Optional list of prior messages for multi-turn context
+    """
+    # Build comprehensive context for chairman
+    stage1_text = "\n\n".join([
+        f"Model: {result['model']}\nResponse: {result['response']}"
+        for result in stage1_results
+    ])
+
+    stage2_text = "\n\n".join([
+        f"Model: {result['model']}\nRanking: {result['ranking']}"
+        for result in stage2_results
+    ])
+
+    chairman_prompt = f"""You are the Chairman of an LLM Council. Multiple AI models have provided responses to a user's question, and then ranked each other's responses.
+
+Original Question: {user_query}
+
+STAGE 1 - Individual Responses:
+{stage1_text}
+
+STAGE 2 - Peer Rankings:
+{stage2_text}
+
+Your task as Chairman is to synthesize all of this information into a single, comprehensive, accurate answer to the user's original question. Consider:
+- The individual responses and their insights
+- The peer rankings and what they reveal about response quality
+- Any patterns of agreement or disagreement
+
+Provide a clear, well-reasoned final answer that represents the council's collective wisdom:"""
+
+    if conversation_history:
+        history = build_stage3_history(conversation_history)
+        messages = history + [{"role": "user", "content": chairman_prompt}]
+    else:
+        messages = [{"role": "user", "content": chairman_prompt}]
+
+    # Yield the model info first
+    yield {
+        "type": "model_info",
+        "model": CHAIRMAN_MODEL
+    }
+
+    # Stream the response
+    full_response = ""
+    async for chunk in query_model_stream(CHAIRMAN_MODEL, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
+        if chunk:
+            full_response += chunk
+            yield {
+                "type": "content_chunk",
+                "chunk": chunk
+            }
+
+    # Yield the final complete object
+    yield {
+        "type": "complete",
+        "data": {
+            "model": CHAIRMAN_MODEL,
+            "response": full_response
+        }
     }
 
 

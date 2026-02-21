@@ -2,6 +2,7 @@
 
 import json
 import os
+import tempfile
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from pathlib import Path
@@ -66,16 +67,26 @@ def get_conversation(conversation_id: str) -> Optional[Dict[str, Any]]:
 
 def save_conversation(conversation: Dict[str, Any]):
     """
-    Save a conversation to storage.
+    Save a conversation to storage atomically.
 
-    Args:
-        conversation: Conversation dict to save
+    Writes to a temp file first, then uses os.replace() for crash safety.
     """
     ensure_data_dir()
 
     path = get_conversation_path(conversation['id'])
-    with open(path, 'w') as f:
-        json.dump(conversation, f, indent=2)
+    dir_name = os.path.dirname(path)
+    fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w') as f:
+            json.dump(conversation, f, indent=2)
+        os.replace(tmp_path, path)
+    except Exception:
+        # Clean up temp file on failure
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
 
 def list_conversations() -> List[Dict[str, Any]]:
@@ -169,6 +180,50 @@ def update_conversation_title(conversation_id: str, title: str):
         raise ValueError(f"Conversation {conversation_id} not found")
 
     conversation["title"] = title
+    save_conversation(conversation)
+
+
+def upsert_assistant_message(
+    conversation_id: str,
+    job_id: str,
+    status: str,
+    stage1: Optional[List[Dict[str, Any]]] = None,
+    stage2: Optional[List[Dict[str, Any]]] = None,
+    stage3: Optional[Dict[str, Any]] = None,
+    metadata: Optional[Dict[str, Any]] = None,
+):
+    """
+    Insert or update an assistant message identified by job_id.
+
+    First call (no existing message with this job_id) appends a new message.
+    Subsequent calls update the same message in-place.
+    """
+    conversation = get_conversation(conversation_id)
+    if conversation is None:
+        raise ValueError(f"Conversation {conversation_id} not found")
+
+    # Build the message dict
+    msg_data = {
+        "role": "assistant",
+        "job_id": job_id,
+        "status": status,
+        "stage1": stage1,
+        "stage2": stage2,
+        "stage3": stage3,
+        "metadata": metadata,
+    }
+
+    # Try to find existing message with this job_id
+    found = False
+    for i, msg in enumerate(conversation["messages"]):
+        if msg.get("job_id") == job_id:
+            conversation["messages"][i] = msg_data
+            found = True
+            break
+
+    if not found:
+        conversation["messages"].append(msg_data)
+
     save_conversation(conversation)
 
 

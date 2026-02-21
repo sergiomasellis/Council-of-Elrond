@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+@source "../node_modules/streamdown/dist/*.js";
+@import "streamdown/styles.css";
+
 :root {
   /* Core Colors */
   --bg-primary: #050607;
@@ -64,9 +69,12 @@
   --brand-glow: rgba(47, 124, 246, 0.14);
 }
 
-* {
+*:where(:not(.markdown-content, .markdown-content *)) {
   margin: 0;
   padding: 0;
+}
+
+* {
   box-sizing: border-box;
 }
 
@@ -108,173 +116,73 @@ body {
   background: var(--text-tertiary);
 }
 
-/* Global markdown styling */
+/*
+ * Streamdown theme overrides.
+ * IMPORTANT: Streamdown outputs Tailwind utility classes (space-y-4, mt-6, mb-2, etc.)
+ * for all spacing. Tailwind v4 wraps utilities in :where() for zero specificity,
+ * so any class-based selectors here (.markdown-content ...) will override them.
+ * Only set colors/fonts/borders here — never set margin or padding.
+ */
 .markdown-content {
+  --primary: var(--brand-primary);
+  --primary-foreground: var(--text-primary);
+  --muted: var(--bg-tertiary);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--border-color);
+  --ring: var(--brand-primary);
+  --radius: var(--radius-md);
+
   line-height: 1.6;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
 }
 
-.markdown-content p {
-  margin: 0 0 16px 0;
-}
-
-.markdown-content p:last-child {
-  margin-bottom: 0;
-}
-
-.markdown-content h1,
-.markdown-content h2,
-.markdown-content h3,
-.markdown-content h4,
-.markdown-content h5,
-.markdown-content h6 {
-  margin: 24px 0 12px 0;
+.markdown-content [data-streamdown="heading-1"],
+.markdown-content [data-streamdown="heading-2"],
+.markdown-content [data-streamdown="heading-3"],
+.markdown-content [data-streamdown="heading-4"],
+.markdown-content [data-streamdown="heading-5"],
+.markdown-content [data-streamdown="heading-6"] {
   color: var(--text-primary);
   font-weight: 600;
 }
 
-.markdown-content h1:first-child,
-.markdown-content h2:first-child,
-.markdown-content h3:first-child {
-  margin-top: 0;
+.markdown-content [data-streamdown="link"] {
+  color: var(--brand-primary);
 }
 
-.markdown-content ul,
-.markdown-content ol {
-  margin: 0 0 16px 0;
-  padding-left: 24px;
-}
-
-.markdown-content li {
-  margin: 6px 0;
-  color: var(--text-primary);
-}
-
-.markdown-content pre {
-  background: var(--bg-tertiary);
-  padding: 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--glass-border);
-  overflow-x: auto;
-  margin: 0 0 16px 0;
-  box-shadow: none;
-}
-
-.markdown-content code {
+.markdown-content [data-streamdown="inline-code"] {
   background: rgba(63, 225, 192, 0.14);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.9em;
   color: var(--text-primary);
 }
 
-.markdown-content pre code {
-  background: none;
-  padding: 0;
-  color: inherit;
+.markdown-content [data-streamdown="code-block"] {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
 }
 
-.markdown-content pre[class*="language-"] {
-  background: var(--bg-tertiary) !important;
-  border: 1px solid var(--border-color);
-}
-
-.markdown-content code[class*="language-"] {
-  background: transparent;
-}
-
-.markdown-content .token.comment,
-.markdown-content .token.prolog,
-.markdown-content .token.doctype,
-.markdown-content .token.cdata {
-  color: #7c8294;
-}
-
-.markdown-content .token.punctuation {
-  color: #cbd2df;
-}
-
-.markdown-content .token.property,
-.markdown-content .token.tag,
-.markdown-content .token.constant,
-.markdown-content .token.symbol,
-.markdown-content .token.deleted {
-  color: #ef5e66;
-}
-
-.markdown-content .token.boolean,
-.markdown-content .token.number {
-  color: #f8b84e;
-}
-
-.markdown-content .token.selector,
-.markdown-content .token.attr-name,
-.markdown-content .token.string,
-.markdown-content .token.char,
-.markdown-content .token.builtin,
-.markdown-content .token.inserted {
-  color: #18c2a5;
-}
-
-.markdown-content .token.operator,
-.markdown-content .token.entity,
-.markdown-content .token.url,
-.markdown-content .token.variable {
-  color: #63a4ff;
-}
-
-.markdown-content .token.atrule,
-.markdown-content .token.attr-value,
-.markdown-content .token.function,
-.markdown-content .token.class-name {
-  color: #63a4ff;
-}
-
-.markdown-content .token.keyword {
-  color: #c084fc;
-}
-
-.markdown-content .token.regex,
-.markdown-content .token.important {
-  color: #f472b6;
-}
-
-.markdown-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0;
-  border: 1px solid var(--border-color);
-}
-
-.markdown-content th,
-.markdown-content td {
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  text-align: left;
-  color: var(--text-primary);
-}
-
-.markdown-content th {
-  background: var(--bg-tertiary);
-  font-weight: 700;
-}
-
-.markdown-content tr:nth-child(even) td {
-  background: var(--bg-secondary);
-}
-
-.markdown-content blockquote {
-  margin: 0 0 16px 0;
-  padding-left: 16px;
-  border-left: 3px solid var(--brand-primary);
+.markdown-content [data-streamdown="blockquote"] {
+  border-left-color: var(--brand-primary);
   color: var(--text-secondary);
 }
 
-.markdown-content a {
-  color: var(--brand-primary);
-  text-decoration: none;
+.markdown-content [data-streamdown="table"] {
+  border-color: var(--border-color);
 }
 
-.markdown-content a:hover {
-  text-decoration: underline;
+.markdown-content [data-streamdown="table-header"] {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.markdown-content [data-streamdown="table-cell"] {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.markdown-content [data-streamdown="horizontal-rule"] {
+  border-color: var(--border-color);
 }

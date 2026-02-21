@@ -3,7 +3,7 @@ import { BotIcon, ChevronDownIcon, ChevronRightIcon } from './Icons';
 import Markdown from './Markdown';
 import './Stage1.css';
 
-export default function Stage1({ responses }) {
+export default function Stage1({ responses, isAnimating = false }) {
   const [activeTab, setActiveTab] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -48,7 +48,7 @@ export default function Stage1({ responses }) {
               <span className="model-badge">{responses[activeTab].model}</span>
             </div>
             <div className="response-text markdown-content">
-              <Markdown>{responses[activeTab].response}</Markdown>
+              <Markdown isAnimating={isAnimating}>{responses[activeTab].response}</Markdown>
             </div>
           </div>
         </div>

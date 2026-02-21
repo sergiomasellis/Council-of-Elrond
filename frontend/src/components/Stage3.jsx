@@ -2,7 +2,7 @@ import { SparklesIcon } from './Icons';
 import Markdown from './Markdown';
 import './Stage3.css';
 
-export default function Stage3({ finalResponse }) {
+export default function Stage3({ finalResponse, isAnimating = false }) {
   if (!finalResponse) {
     return null;
   }
@@ -21,7 +21,7 @@ export default function Stage3({ finalResponse }) {
           <span>Synthesized by <strong>{modelName}</strong></span>
         </div>
         <div className="final-text markdown-content">
-          <Markdown>{finalResponse.response}</Markdown>
+          <Markdown isAnimating={isAnimating}>{finalResponse.response}</Markdown>
         </div>
       </div>
     </div>

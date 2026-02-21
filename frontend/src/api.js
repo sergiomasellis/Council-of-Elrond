@@ -101,19 +101,51 @@ export const api = {
       }
     );
 
+    if (response.status === 409) {
+      const err = new Error('Job already running');
+      err.status = 409;
+      throw err;
+    }
+
     if (!response.ok) {
       throw new Error('Failed to send message');
     }
 
+    await this._readSSEStream(response, onEvent);
+  },
+
+  async getJobStatus(conversationId) {
+    const response = await fetch(
+      `${API_BASE}/api/conversations/${conversationId}/job/status`
+    );
+    if (!response.ok) {
+      throw new Error('Failed to get job status');
+    }
+    return response.json();
+  },
+
+  async reconnectJobStream(conversationId, afterIndex, onEvent) {
+    const response = await fetch(
+      `${API_BASE}/api/conversations/${conversationId}/job/stream?after=${afterIndex}`
+    );
+    if (!response.ok) {
+      throw new Error('No active job to reconnect to');
+    }
+    await this._readSSEStream(response, onEvent);
+  },
+
+  async _readSSEStream(response, onEvent) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
+    let buffer = '';
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
 
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {

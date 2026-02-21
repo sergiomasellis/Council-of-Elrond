@@ -14,7 +14,7 @@ function deAnonymizeText(text, labelToModel) {
   return result;
 }
 
-export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
+export default function Stage2({ rankings, labelToModel, aggregateRankings, isAnimating = false }) {
   const [activeTab, setActiveTab] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -84,7 +84,7 @@ export default function Stage2({ rankings, labelToModel, aggregateRankings }) {
 
           <div className="review-card">
             <div className="review-content markdown-content">
-              <Markdown>
+              <Markdown isAnimating={isAnimating}>
                 {deAnonymizeText(rankings[activeTab].ranking, labelToModel)}
               </Markdown>
             </div>

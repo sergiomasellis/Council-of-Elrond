@@ -371,6 +371,16 @@
   box-shadow: none;
 }
 
+.interrupted-notice {
+  padding: 10px 16px;
+  margin: 12px 0 0;
+  background: color-mix(in srgb, var(--warning) 10%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, var(--warning) 30%, var(--border-color));
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: 13px;
+}
+
 .icon-spin {
   animation: spin 1.8s linear infinite;
   width: 18px;

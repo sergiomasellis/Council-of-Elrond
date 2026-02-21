@@ -10,13 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@streamdown/code": "^1.0.3",
+    "@streamdown/mermaid": "^1.0.2",
+    "@tailwindcss/vite": "^4.2.0",
     "postprocessing": "^6.38.0",
-    "prismjs": "^1.30.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-markdown": "^10.1.0",
-    "rehype-prism-plus": "^2.0.1",
-    "remark-gfm": "^4.0.1",
+    "streamdown": "^2.3.0",
+    "tailwindcss": "^4.2.0",
     "three": "^0.181.2"
   },
   "devDependencies": {

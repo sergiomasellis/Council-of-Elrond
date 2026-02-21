@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
 import { BrainIcon, MenuIcon } from './Icons';
@@ -12,14 +12,34 @@ export default function ChatInterface({
   onToggleSidebar,
 }) {
   const messagesEndRef = useRef(null);
+  const containerRef = useRef(null);
+  const isNearBottomRef = useRef(true);
 
-  const scrollToBottom = () => {
+  const checkIfNearBottom = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const threshold = 150;
+    isNearBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+  }, []);
+
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
+
+  // Re-engage auto-scroll when user sends a new message
+  useEffect(() => {
+    if (isLoading) {
+      isNearBottomRef.current = true;
+      scrollToBottom();
+    }
+  }, [isLoading, scrollToBottom]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [conversation]);
+    if (isNearBottomRef.current) {
+      scrollToBottom();
+    }
+  }, [conversation, scrollToBottom]);
 
   if (!conversation) {
     return (
@@ -64,7 +84,7 @@ export default function ChatInterface({
       <button className="mobile-menu-btn" onClick={onToggleSidebar} aria-label="Open menu">
         <MenuIcon className="icon-sm" />
       </button>
-      <div className="messages-container">
+      <div className="messages-container" ref={containerRef} onScroll={checkIfNearBottom}>
         {conversation.messages.length === 0 ? (
           <div className="empty-state">
             <div className="empty-visual">

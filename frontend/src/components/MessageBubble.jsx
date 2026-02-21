@@ -6,6 +6,8 @@ import Markdown from './Markdown';
 
 export default function MessageBubble({ message }) {
     const isUser = message.role === 'user';
+    const isStreaming = !!(message.loading?.stage1 || message.loading?.stage2 || message.loading?.stage3);
+    const isPartial = message.status && message.status !== 'complete' && !isStreaming;
 
     return (
         <div className={`message-group ${isUser ? 'user' : 'assistant'}`}>
@@ -31,7 +33,7 @@ export default function MessageBubble({ message }) {
                                 <span>Consulting individual agents...</span>
                             </div>
                         )}
-                        {message.stage1 && <Stage1 responses={message.stage1} />}
+                        {message.stage1 && <Stage1 responses={message.stage1} isAnimating={!!message.loading?.stage1} />}
 
                         {/* Stage 2 */}
                         {message.loading?.stage2 && (
@@ -45,6 +47,7 @@ export default function MessageBubble({ message }) {
                                 rankings={message.stage2}
                                 labelToModel={message.metadata?.label_to_model}
                                 aggregateRankings={message.metadata?.aggregate_rankings}
+                                isAnimating={!!message.loading?.stage2}
                             />
                         )}
 
@@ -55,7 +58,14 @@ export default function MessageBubble({ message }) {
                                 <span>Synthesizing final verdict...</span>
                             </div>
                         )}
-                        {message.stage3 && <Stage3 finalResponse={message.stage3} />}
+                        {message.stage3 && <Stage3 finalResponse={message.stage3} isAnimating={!!message.loading?.stage3} />}
+
+                        {/* Interrupted notice */}
+                        {isPartial && (
+                            <div className="interrupted-notice">
+                                Processing was interrupted — partial results shown above.
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
