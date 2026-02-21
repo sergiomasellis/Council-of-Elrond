@@ -52,7 +52,7 @@ export default function ChatInterface({
             <PixelBlast
               variant="circle"
               pixelSize={3}
-              color="#0f5c4f"
+              color="#d4af37"
               patternScale={2}
               patternDensity={0.55}
               pixelSizeJitter={1.25}
@@ -72,8 +72,8 @@ export default function ChatInterface({
           <div className="empty-state-icon">
             <BrainIcon className="icon-xl" />
           </div>
-          <h2>Welcome to LLM Council</h2>
-          <p>Consult a panel of AI experts for comprehensive answers.</p>
+          <h2>The Council of Elrond</h2>
+          <p>Consult the council of wise elders for comprehensive answers.</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export default function ChatInterface({
             <PixelBlast
               variant="circle"
               pixelSize={3}
-              color="#0f5c4f"
+              color="#d4af37"
               patternScale={3}
               patternDensity={0.55}
               pixelSizeJitter={1.25}
@@ -112,7 +112,7 @@ export default function ChatInterface({
               <BrainIcon className="icon-xl" />
             </div>
             <h2>Start a conversation</h2>
-            <p>Ask a question to consult the LLM Council</p>
+            <p>Ask a question to consult The Council of Elrond</p>
           </div>
         ) : (
           conversation.messages.map((msg, index) => (

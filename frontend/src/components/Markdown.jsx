@@ -8,7 +8,7 @@ export default function Markdown({ children, isAnimating = false }) {
       <Streamdown
         plugins={{ code, mermaid }}
         isAnimating={isAnimating}
-        shikiTheme={['github-light', 'github-dark-default']}
+        shikiTheme={['everforest-light', 'everforest-dark']}
         controls={{ code: true, table: true, mermaid: true }}
       >
         {children || ''}

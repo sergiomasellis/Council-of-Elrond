@@ -48,13 +48,10 @@
 .sidebar-header h1 {
   font-size: 20px;
   margin: 0;
-  color: var(--text-primary);
+  color: var(--brand-primary);
   font-weight: 700;
   letter-spacing: -0.4px;
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-heading);
 }
 
 .new-conversation-btn {

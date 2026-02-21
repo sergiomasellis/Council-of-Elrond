@@ -128,7 +128,7 @@ export default function ChatInput({ onSendMessage, isLoading }) {
                 </div>
             </div>
             <div className="input-footer">
-                <small>AI Council can make mistakes. Verify important information.</small>
+                <small>The Council of Elrond can make mistakes. Verify important information.</small>
             </div>
         </form>
     );

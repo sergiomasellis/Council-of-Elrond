@@ -17,7 +17,7 @@ export default function Sidebar({
       <div className="sidebar-header">
         <div className="logo-area">
           <BrainIcon className="logo-icon" />
-          <h1>LLM Council</h1>
+          <h1>Council of Elrond</h1>
         </div>
         <button className="mobile-close-btn" onClick={onClose} aria-label="Close menu">
           <CloseIcon className="icon-sm" />
@@ -68,7 +68,7 @@ export default function Sidebar({
           <div className="user-avatar">U</div>
           <div className="user-info">
             <span className="user-name">User</span>
-            <span className="user-role">Council Lead</span>
+            <span className="user-role">Fellowship</span>
           </div>
         </div>
         <button className="theme-toggle" onClick={toggleTheme} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>

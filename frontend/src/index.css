@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
@@ -6,37 +6,41 @@
 @import "streamdown/styles.css";
 
 :root {
-  /* Core Colors */
-  --bg-primary: #050607;
-  --bg-secondary: #0b0d10;
-  --bg-tertiary: #11151b;
-  --bg-accent: #151a22;
+  --bg-primary: #171c18;
+  /* Deep Elven Forest */
+  --bg-secondary: #212923;
+  /* Darker Wood */
+  --bg-tertiary: #2a362e;
+  --bg-accent: #37473d;
 
   /* Text Colors */
-  --text-primary: #e6e9ef;
-  --text-secondary: #a7afc2;
-  --text-tertiary: #6d7586;
+  --text-primary: #e8dcc4;
+  /* Aged Parchment */
+  --text-secondary: #c9b99e;
+  --text-tertiary: #8f8166;
 
   /* Brand Colors */
-  --brand-primary: #18c2a5;
-  --brand-secondary: #3582f4;
-  --brand-glow: transparent;
+  --brand-primary: #d4af37;
+  /* Elven Gold */
+  --brand-secondary: #8c7221;
+  --brand-glow: rgba(212, 175, 55, 0.15);
 
   /* Status Colors */
-  --success: #22c55e;
-  --warning: #f8b84e;
-  --error: #ef5e66;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --error: #f87171;
 
   /* UI Elements */
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.18);
-  --glass-bg: rgba(12, 14, 18, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --shadow-soft: none;
-  --shadow-strong: none;
+  --border-color: rgba(212, 175, 55, 0.2);
+  --border-hover: rgba(212, 175, 55, 0.4);
+  --glass-bg: rgba(23, 28, 24, 0.85);
+  --glass-border: rgba(212, 175, 55, 0.15);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.6);
 
   /* Typography */
-  --font-sans: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Metamorphous', serif;
+  --font-sans: 'Cormorant Garamond', Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Spacing & Radius */
@@ -51,22 +55,25 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: #f7f8fb;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #eef1f7;
-  --bg-accent: #e2e8f0;
+  --bg-primary: #f2e8d5;
+  /* Light Parchment background */
+  --bg-secondary: #e8dac1;
+  /* Slightly darker parchment */
+  --bg-tertiary: #d9c8aa;
+  --bg-accent: #cbb48e;
 
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-tertiary: #64748b;
+  --text-primary: #2c241b;
+  /* Dark ink */
+  --text-secondary: #4a3e2f;
+  --text-tertiary: #6b5c46;
 
-  --border-color: #d7deeb;
-  --border-hover: #c8d0e2;
+  --border-color: #cbb48e;
+  --border-hover: #b09160;
 
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(15, 23, 42, 0.1);
+  --glass-bg: rgba(242, 232, 213, 0.75);
+  --glass-border: rgba(44, 36, 27, 0.1);
 
-  --brand-glow: rgba(47, 124, 246, 0.14);
+  --brand-glow: rgba(212, 175, 55, 0.25);
 }
 
 *:where(:not(.markdown-content, .markdown-content *)) {
@@ -137,14 +144,10 @@ body {
   font-family: var(--font-sans);
 }
 
-.markdown-content [data-streamdown="heading-1"],
-.markdown-content [data-streamdown="heading-2"],
-.markdown-content [data-streamdown="heading-3"],
-.markdown-content [data-streamdown="heading-4"],
-.markdown-content [data-streamdown="heading-5"],
-.markdown-content [data-streamdown="heading-6"] {
-  color: var(--text-primary);
-  font-weight: 600;
+.markdown-content [data-streamdown^="heading-"] {
+  color: var(--brand-primary);
+  font-weight: 400;
+  font-family: var(--font-heading);
 }
 
 .markdown-content [data-streamdown="link"] {

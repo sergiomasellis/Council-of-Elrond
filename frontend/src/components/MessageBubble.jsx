@@ -17,7 +17,7 @@ export default function MessageBubble({ message }) {
 
             <div className="message-body">
                 <div className="message-header">
-                    <span className="message-author">{isUser ? 'You' : 'LLM Council'}</span>
+                    <span className="message-author">{isUser ? 'You' : 'Council of Elrond'}</span>
                 </div>
 
                 {isUser ? (
