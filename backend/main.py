@@ -5,12 +5,16 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import uuid
 import json
 import asyncio
+import time
+
+import httpx
 
 from . import storage
+from .config import load_config, get_council_models, get_chairman_model, update_config, OPENROUTER_API_KEY
 from .council import run_full_council, generate_conversation_title
 from .jobs import job_manager, run_council_pipeline
 
@@ -46,6 +50,7 @@ async def _mark_orphaned_messages():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
+    load_config()
     await _mark_orphaned_messages()
     cleanup_task = asyncio.create_task(_periodic_cleanup())
     yield
@@ -55,6 +60,32 @@ async def lifespan(app: FastAPI):
         await cleanup_task
     except asyncio.CancelledError:
         pass
+
+
+# --- Cached OpenRouter model list ---
+
+_models_cache: Dict[str, Any] = {"data": None, "fetched_at": 0.0}
+_MODELS_CACHE_TTL = 300  # 5 minutes
+
+
+async def _fetch_openrouter_models():
+    """Fetch available models from OpenRouter, with 5-min cache."""
+    now = time.time()
+    if _models_cache["data"] is not None and (now - _models_cache["fetched_at"]) < _MODELS_CACHE_TTL:
+        return _models_cache["data"]
+
+    headers = {}
+    if OPENROUTER_API_KEY:
+        headers["Authorization"] = f"Bearer {OPENROUTER_API_KEY}"
+
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.get("https://openrouter.ai/api/v1/models", headers=headers)
+        resp.raise_for_status()
+        data = resp.json()
+
+    _models_cache["data"] = data
+    _models_cache["fetched_at"] = now
+    return data
 
 
 app = FastAPI(title="LLM Council API", lifespan=lifespan)
@@ -77,6 +108,12 @@ class CreateConversationRequest(BaseModel):
 class SendMessageRequest(BaseModel):
     """Request to send a message in a conversation."""
     content: str
+
+
+class UpdateConfigRequest(BaseModel):
+    """Request to update council configuration."""
+    council_models: List[str]
+    chairman_model: str
 
 
 class ConversationMetadata(BaseModel):
@@ -131,6 +168,37 @@ async def delete_conversation(conversation_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return {"status": "success", "id": conversation_id}
+
+
+@app.get("/api/models")
+async def list_available_models():
+    """Proxy to OpenRouter models API (cached 5 min)."""
+    try:
+        data = await _fetch_openrouter_models()
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to fetch models from OpenRouter: {str(e)}")
+
+
+@app.get("/api/config")
+async def get_config():
+    """Return current council configuration."""
+    return {
+        "council_models": get_council_models(),
+        "chairman_model": get_chairman_model(),
+    }
+
+
+@app.put("/api/config")
+async def put_config(request: UpdateConfigRequest):
+    """Update council configuration."""
+    if len(request.council_models) < 2:
+        raise HTTPException(status_code=400, detail="At least 2 council models are required")
+    update_config(request.council_models, request.chairman_model)
+    return {
+        "council_models": get_council_models(),
+        "chairman_model": get_chairman_model(),
+    }
 
 
 @app.post("/api/conversations/{conversation_id}/message")

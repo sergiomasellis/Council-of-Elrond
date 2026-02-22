@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
+import AdminPanel from './components/AdminPanel';
 import { api } from './api';
 import './App.css';
 
@@ -11,6 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeView, setActiveView] = useState('chat');
   const currentConversationIdRef = useRef(null);
 
   useEffect(() => {
@@ -291,6 +293,7 @@ function App() {
         ...conversations,
       ]);
       setCurrentConversationId(newConv.id);
+      setActiveView('chat');
       closeSidebar();
     } catch (error) {
       console.error('Failed to create conversation:', error);
@@ -299,6 +302,7 @@ function App() {
 
   const handleSelectConversation = (id) => {
     setCurrentConversationId(id);
+    setActiveView('chat');
     closeSidebar();
   };
 
@@ -386,18 +390,23 @@ function App() {
         toggleTheme={toggleTheme}
         isOpen={isSidebarOpen}
         onClose={closeSidebar}
+        onOpenAdmin={() => { setActiveView('admin'); closeSidebar(); }}
       />
       <div
         className={`sidebar-backdrop ${isSidebarOpen ? 'show' : ''}`}
         onClick={closeSidebar}
         aria-hidden="true"
       />
-      <ChatInterface
-        conversation={currentConversation}
-        onSendMessage={handleSendMessage}
-        isLoading={isLoading}
-        onToggleSidebar={toggleSidebar}
-      />
+      {activeView === 'admin' ? (
+        <AdminPanel onClose={() => setActiveView('chat')} />
+      ) : (
+        <ChatInterface
+          conversation={currentConversation}
+          onSendMessage={handleSendMessage}
+          isLoading={isLoading}
+          onToggleSidebar={toggleSidebar}
+        />
+      )}
     </div>
   );
 }

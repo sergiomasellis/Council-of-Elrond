@@ -134,6 +134,40 @@ export const api = {
     await this._readSSEStream(response, onEvent);
   },
 
+  async getAvailableModels() {
+    const response = await fetch(`${API_BASE}/api/models`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch available models');
+    }
+    return response.json();
+  },
+
+  async getConfig() {
+    const response = await fetch(`${API_BASE}/api/config`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch config');
+    }
+    return response.json();
+  },
+
+  async updateConfig(councilModels, chairmanModel) {
+    const response = await fetch(`${API_BASE}/api/config`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        council_models: councilModels,
+        chairman_model: chairmanModel,
+      }),
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to update config');
+    }
+    return response.json();
+  },
+
   async _readSSEStream(response, onEvent) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();

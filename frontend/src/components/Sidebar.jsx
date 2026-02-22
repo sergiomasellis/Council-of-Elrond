@@ -1,4 +1,4 @@
-import { PlusIcon, ChatIcon, BrainIcon, SunIcon, MoonIcon, TrashIcon, CloseIcon } from './Icons';
+import { PlusIcon, ChatIcon, BrainIcon, SunIcon, MoonIcon, TrashIcon, CloseIcon, SettingsIcon } from './Icons';
 import './Sidebar.css';
 
 export default function Sidebar({
@@ -11,6 +11,7 @@ export default function Sidebar({
   toggleTheme,
   isOpen = false,
   onClose,
+  onOpenAdmin,
 }) {
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
@@ -71,6 +72,9 @@ export default function Sidebar({
             <span className="user-role">Fellowship</span>
           </div>
         </div>
+        <button className="settings-btn" onClick={onOpenAdmin} title="Council Settings">
+          <SettingsIcon className="icon-sm" />
+        </button>
         <button className="theme-toggle" onClick={toggleTheme} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
           {theme === 'dark' ? <SunIcon className="icon-sm" /> : <MoonIcon className="icon-sm" />}
         </button>

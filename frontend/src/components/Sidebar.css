@@ -257,6 +257,7 @@
   font-size: 12px;
 }
 
+.settings-btn,
 .theme-toggle {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-color);
@@ -272,6 +273,7 @@
   box-shadow: none;
 }
 
+.settings-btn:hover,
 .theme-toggle:hover {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);

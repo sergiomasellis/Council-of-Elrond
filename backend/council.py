@@ -2,7 +2,7 @@
 
 from typing import List, Dict, Any, Tuple
 from .openrouter import query_models_parallel, query_model, query_model_stream, query_models_stream, query_models_stream_per_model
-from .config import COUNCIL_MODELS, CHAIRMAN_MODEL
+from .config import get_council_models, get_chairman_model
 from .search import SEARCH_TOOLS, execute_search_tool
 
 
@@ -109,10 +109,11 @@ async def stage1_collect_responses(user_query: str) -> List[Dict[str, Any]]:
     Returns:
         List of dicts with 'model' and 'response' keys
     """
+    council_models = get_council_models()
     messages = [{"role": "user", "content": user_query}]
 
     # Query all models in parallel
-    responses = await query_models_parallel(COUNCIL_MODELS, messages)
+    responses = await query_models_parallel(council_models, messages)
 
     # Format results
     stage1_results = []
@@ -135,13 +136,14 @@ async def stage1_collect_responses_stream(user_query: str, conversation_history=
         user_query: The user's question
         conversation_history: Optional list of prior messages for multi-turn context
     """
+    council_models = get_council_models()
     if conversation_history:
-        model_messages = build_stage1_history(conversation_history, user_query, COUNCIL_MODELS)
+        model_messages = build_stage1_history(conversation_history, user_query, council_models)
         async for model, chunk in query_models_stream_per_model(model_messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
             yield model, chunk
     else:
         messages = [{"role": "user", "content": user_query}]
-        async for model, chunk in query_models_stream(COUNCIL_MODELS, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
+        async for model, chunk in query_models_stream(council_models, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
             yield model, chunk
 
 
@@ -208,7 +210,8 @@ Now provide your evaluation and ranking:"""
     messages = [{"role": "user", "content": ranking_prompt}]
 
     # Get rankings from all council models in parallel
-    responses = await query_models_parallel(COUNCIL_MODELS, messages)
+    council_models = get_council_models()
+    responses = await query_models_parallel(council_models, messages)
 
     # Format results
     stage2_results = []
@@ -285,7 +288,8 @@ Now provide your evaluation and ranking:"""
     yield None, None, label_to_model
 
     # Query all models in parallel with streaming
-    async for model, chunk in query_models_stream(COUNCIL_MODELS, messages):
+    council_models = get_council_models()
+    async for model, chunk in query_models_stream(council_models, messages):
         yield model, chunk, None
 
 
@@ -333,20 +337,21 @@ Your task as Chairman is to synthesize all of this information into a single, co
 
 Provide a clear, well-reasoned final answer that represents the council's collective wisdom:"""
 
+    chairman_model = get_chairman_model()
     messages = [{"role": "user", "content": chairman_prompt}]
 
     # Query the chairman model
-    response = await query_model(CHAIRMAN_MODEL, messages)
+    response = await query_model(chairman_model, messages)
 
     if response is None:
         # Fallback if chairman fails
         return {
-            "model": CHAIRMAN_MODEL,
+            "model": chairman_model,
             "response": "Error: Unable to generate final synthesis."
         }
 
     return {
-        "model": CHAIRMAN_MODEL,
+        "model": chairman_model,
         "response": response.get('content', '')
     }
 
@@ -395,6 +400,8 @@ Your task as Chairman is to synthesize all of this information into a single, co
 
 Provide a clear, well-reasoned final answer that represents the council's collective wisdom:"""
 
+    chairman_model = get_chairman_model()
+
     if conversation_history:
         history = build_stage3_history(conversation_history)
         messages = history + [{"role": "user", "content": chairman_prompt}]
@@ -404,12 +411,12 @@ Provide a clear, well-reasoned final answer that represents the council's collec
     # Yield the model info first
     yield {
         "type": "model_info",
-        "model": CHAIRMAN_MODEL
+        "model": chairman_model
     }
 
     # Stream the response
     full_response = ""
-    async for chunk in query_model_stream(CHAIRMAN_MODEL, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
+    async for chunk in query_model_stream(chairman_model, messages, tools=SEARCH_TOOLS, tool_executor=execute_search_tool):
         if chunk:
             full_response += chunk
             yield {
@@ -421,7 +428,7 @@ Provide a clear, well-reasoned final answer that represents the council's collec
     yield {
         "type": "complete",
         "data": {
-            "model": CHAIRMAN_MODEL,
+            "model": chairman_model,
             "response": full_response
         }
     }
