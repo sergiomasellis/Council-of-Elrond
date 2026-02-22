@@ -1,0 +1,22 @@
+services:
+  council-backend:
+    build: .
+    container_name: council-backend
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - BRAVE_SEARCH_API_KEY=${BRAVE_SEARCH_API_KEY}
+    volumes:
+      - council-data:/app/data
+    restart: unless-stopped
+
+  council-frontend:
+    build: ./frontend
+    container_name: council-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - council-backend
+    restart: unless-stopped
+
+volumes:
+  council-data:

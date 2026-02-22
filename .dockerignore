@@ -1,0 +1,10 @@
+node_modules
+frontend
+.venv
+__pycache__
+*.pyc
+data
+.env
+.git
+.claude
+*.md
