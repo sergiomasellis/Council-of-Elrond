@@ -11,16 +11,29 @@ services:
       council-net:
         ipv4_address: ${BACKEND_IP}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   council-frontend:
     build: ./frontend
     container_name: council-frontend
     depends_on:
-      - council-backend
+      council-backend:
+        condition: service_healthy
     networks:
       council-net:
         ipv4_address: ${FRONTEND_IP}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 networks:
   council-net:
