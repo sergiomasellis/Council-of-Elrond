@@ -7,16 +7,25 @@ services:
       - BRAVE_SEARCH_API_KEY=${BRAVE_SEARCH_API_KEY}
     volumes:
       - council-data:/app/data
+    networks:
+      council-net:
+        ipv4_address: ${BACKEND_IP}
     restart: unless-stopped
 
   council-frontend:
     build: ./frontend
     container_name: council-frontend
-    ports:
-      - "3000:80"
     depends_on:
       - council-backend
+    networks:
+      council-net:
+        ipv4_address: ${FRONTEND_IP}
     restart: unless-stopped
+
+networks:
+  council-net:
+    external: true
+    name: br0
 
 volumes:
   council-data:

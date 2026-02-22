@@ -88,7 +88,8 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -96,12 +97,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   line-height: 1.5;
+  overflow: hidden;
 }
 
 #root {
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Scrollbar Styling */
@@ -159,12 +164,14 @@ body {
   font-family: var(--font-mono);
   font-size: 0.9em;
   color: var(--text-primary);
+  word-break: break-word;
 }
 
 .markdown-content [data-streamdown="code-block"] {
   border-radius: var(--radius-md);
   border: 1px solid var(--glass-border);
-  overflow: hidden;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .markdown-content [data-streamdown="blockquote"] {

@@ -58,6 +58,7 @@
 
 .rank-info {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -67,6 +68,9 @@
   font-weight: 500;
   font-size: 14px;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rank-bar-container {

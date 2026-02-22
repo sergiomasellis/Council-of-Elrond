@@ -296,6 +296,7 @@
     top: 0;
     bottom: 0;
     height: 100vh;
+    height: 100dvh;
     transform: translateX(-105%);
     z-index: 30;
     border-right: 1px solid var(--border-color);

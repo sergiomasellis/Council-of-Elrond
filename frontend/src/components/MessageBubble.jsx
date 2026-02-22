@@ -11,12 +11,15 @@ export default function MessageBubble({ message }) {
 
     return (
         <div className={`message-group ${isUser ? 'user' : 'assistant'}`}>
-            <div className="message-avatar">
+            <div className="message-avatar desktop-avatar">
                 {isUser ? <UserIcon className="avatar-icon" /> : <BotIcon className="avatar-icon" />}
             </div>
 
             <div className="message-body">
                 <div className="message-header">
+                    <div className="message-avatar mobile-avatar">
+                        {isUser ? <UserIcon className="avatar-icon" /> : <BotIcon className="avatar-icon" />}
+                    </div>
                     <span className="message-author">{isUser ? 'You' : 'Council of Elrond'}</span>
                 </div>
 
